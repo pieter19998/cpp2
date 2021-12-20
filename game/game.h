@@ -19,7 +19,7 @@ private:
     [[nodiscard]] bool GameOver() const;
     [[nodiscard]] bool Victory() const;
     void SetupGame();
-    void Print();
+    void PrintMoves();
 public:
     Game();
     void StartGame();

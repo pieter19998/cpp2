@@ -6,23 +6,23 @@ Game::Game() : player_(nullptr), port_(nullptr), state_(nullptr) {}
 void Game::StartGame() {
     try { SetupGame(); }
     catch (...) {
-        std::cout << "Error setting up game" << std::endl;
+        Logger::get().PrintAndLog("Error setting up game");
         return;
     }
     while (player_->GetPlaying()) {
         //print options
-        Print();
+        PrintMoves();
         std::string input;
         std::cin >> input;
-        Logger::get().log(input);
+        Logger::get().Log(input);
         state_ = state_->Move(std::stoi(input));
         //check game status
         if (GameOver()) {
-            std::cout << "Game over." << std::endl;
+            Logger::get().PrintAndLog("Game Over");
             break;
         }
         if (Victory()) {
-            std::cout << "Victory." << std::endl;
+            Logger::get().PrintAndLog("Victory");
             break;
         }
     }
@@ -44,9 +44,8 @@ void Game::SetupGame() {
     state_ = std::make_unique<Docked>(*player_, *port_);
 }
 
-void Game::Print() {
+void Game::PrintMoves() {
     for (auto &move: state_->Moves()) {
-        Logger::get().log(move);
-        std::cout << move << std::endl;
+        Logger::get().PrintAndLog(move);
     }
 }

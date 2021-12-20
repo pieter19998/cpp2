@@ -30,9 +30,10 @@ std::unique_ptr<State> Repair::Move(int action) {
 }
 
 void Repair::RepairShip() {
-    std::cout << "1 gold per 10 health. Type Exit to cancel" << std::endl;
+    Logger::get().PrintAndLog("1 gold per 10 health. Type Exit to cancel");
     std::string gold;
     std::cin >> gold;
+    Logger::get().Log(gold);
     if (gold == "exit" || gold == "Exit") return;
     try {
         if (player_.CheckFunds(std::stoi(gold))) {
@@ -40,6 +41,6 @@ void Repair::RepairShip() {
             player_.GetShip().Repair(std::stoi(gold));
         }
     } catch (...) {
-        std::cout << "invalid number" << std::endl;
+        Logger::get().PrintAndLog("Invalid number");
     }
 }

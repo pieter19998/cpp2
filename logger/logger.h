@@ -10,5 +10,6 @@ public:
     Logger(Logger &other) = delete;
     void operator=(const Logger &) = delete;
     static Logger& get();
-    void log(const std::string& data);
+    void Log(const std::string& data);
+    void PrintAndLog(const std::string& message);
 };

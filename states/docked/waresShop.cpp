@@ -32,21 +32,23 @@ std::unique_ptr<State> WaresShop::Move(int action) {
 void WaresShop::SellWares() {
     player_.GetShip().PrintCargoSize();
     for (size_t i{0}; i < player_.GetShip().GetCargo().size(); ++i) {
-        std::cout << player_.GetShip().GetCargo().at(i)->GetWare() << " price per piece: "
-                  << player_.GetShip().GetCargo().at(i)->GetPrice()
-                  << " amount: " << player_.GetShip().GetCargo().at(i)->GetWareAmount() << std::endl;
+        Logger::get().PrintAndLog(player_.GetShip().GetCargo().at(i)->GetWare() + " price per piece: "
+                                  + std::to_string(player_.GetShip().GetCargo().at(i)->GetPrice())
+                                  + " amount: " + std::to_string(player_.GetShip().GetCargo().at(i)->GetWareAmount()));
     }
     if (player_.GetShip().GetCargo().empty()) {
-        std::cout << "Cargo hold is empty." << std::endl;
+        Logger::get().PrintAndLog("Cargo hold is empty.");
         return;
     }
     //input
     std::string item, amount;
-    std::cout << "Enter name of item to sell. Or exit to go back" << std::endl;
+    Logger::get().PrintAndLog("Enter name of item to sell. Or exit to go back");
     std::cin >> item;
+    Logger::get().Log(item);
     if (item == "exit" || item == "Exit") return;
-    std::cout << "Enter amount." << std::endl;
+    Logger::get().PrintAndLog("Enter amount.");
     std::cin >> amount;
+    Logger::get().Log(amount);
     try {
         if (std::stoi(amount) <= player_.GetShip().GetCurrentCargoSize()) {
             auto &ware{player_.GetShip().GetWareByName(item)};
@@ -54,28 +56,31 @@ void WaresShop::SellWares() {
             player_.Earn(ware->GetPrice() * std::stoi(amount));
             player_.PrintGold();
         } else {
-            std::cout << "Invalid amount" << std::endl;
+            Logger::get().PrintAndLog("Invalid amount");
         }
     } catch (...) {
-        std::cout << "Invalid input" << std::endl;
+        Logger::get().PrintAndLog("Invalid input");
     }
 }
 
 void WaresShop::BuyWares() {
     std::cout << "Shop inventory:" << std::endl;
     for (size_t i{0}; i < port_.GetWares().size(); ++i) {
-        std::cout << port_.GetWares().at(i)->GetWare() << " price per piece: " << port_.GetWares().at(i)->GetPrice()
-                  << " amount: " << port_.GetWares().at(i)->GetWareAmount() << std::endl;
+        Logger::get().PrintAndLog(port_.GetWares().at(i)->GetWare() + " price per piece: " +
+                                  std::to_string(port_.GetWares().at(i)->GetPrice()) +
+                                  " amount: " + std::to_string(port_.GetWares().at(i)->GetWareAmount()));
     }
     player_.PrintGold();
     player_.GetShip().PrintCargoSize();
-    std::cout << "Enter name of item to buy. Or exit to go back" << std::endl;
+    Logger::get().PrintAndLog("Enter name of item to buy. Or exit to go back");
     //input
     std::string item, amount;
     std::cin >> item;
     if (item == "exit" || item == "Exit") return;
-    std::cout << "Enter amount." << std::endl;
+    Logger::get().PrintAndLog("Enter amount.");
     std::cin >> amount;
+    Logger::get().Log(amount);
+    Logger::get().Log(item);
     //process data
     try {
         auto &ware{port_.GetWareByName(item)};
@@ -88,12 +93,12 @@ void WaresShop::BuyWares() {
             auto copy{ware->GetWareCopy()}; //make lvalue cause constructor expects a lvalue reference
             auto newCargo{std::make_unique<Wares>(copy, ware->GetId(), std::stoi(amount), ware->GetPrice())};
             player_.GetShip().AddCargo(newCargo);
-            std::cout << "transaction succeeded" << std::endl;
+            Logger::get().PrintAndLog("transaction succeeded");
         } else {
-            std::cout << "transaction failed" << std::endl;
+            Logger::get().PrintAndLog("transaction failed");
         }
     }
     catch (...) {
-        std::cout << "Invalid input" << std::endl;
+        Logger::get().PrintAndLog("Invalid input");
     }
 }

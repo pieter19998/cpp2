@@ -12,8 +12,9 @@
 
 class Sql {
 private:
-    std::vector<std::string> queryData_;
+    const std::string dbName_;
 public:
+    Sql();
     [[nodiscard]] std::unique_ptr<Ship>GetShip(int) const;
     [[nodiscard]] int GetDistance(int, int) const;
     [[nodiscard]] Particularities StringToParticularity(const std::string &particularity) const;

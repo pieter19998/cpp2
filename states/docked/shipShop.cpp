@@ -34,28 +34,30 @@ void ShipShop::SellAndBuyShip() {
     player_.GetShip().PrintStats();
     //user input
     std::string sell, shipId;
-    std::cout << "Sell current ship ? yes/no" << std::endl;
+    Logger::get().PrintAndLog("Sell current ship ? yes/no");
     std::cin >> sell;
+    Logger::get().Log(sell);
+    Logger::get().Log(shipId);
     if (sell == "No" || sell == "no") return;
-    std::cout << "Enter Id of ship you want to buy" << std::endl;
+    Logger::get().PrintAndLog("Enter Id of ship you want to buy");
     std::cin >> shipId;
     try {
         auto sql{std::make_unique<Sql>()};
         auto newShip{sql->GetShip(std::stoi(shipId))};
         //check if cargo and cannons fit.
         if (player_.GetShip().GetCurrentCargoSize() > newShip->GetCargoSize()) {
-            std::cout << "Cargo does not fit inside new ship." << std::endl;
+            Logger::get().PrintAndLog("Cargo does not fit inside new ship.");
             return;
         }
         if (player_.GetShip().GetCannons()->TotalCannonAmount() > newShip->GetMaxCannons()) {
-            std::cout << "cannons do not fit inside new ship." << std::endl;
+            Logger::get().PrintAndLog("cannons do not fit inside new ship.");
             return;
         }
         //check funds
         int earn{player_.GetShip().GetShipValue() / 2};
         int newShipValue{player_.GetShip().GetShipValue()};
         if (player_.GetFunds() + earn < newShipValue) {
-            std::cout << "Not enough gold" << std::endl;
+            Logger::get().PrintAndLog("Not enough gold");
             return;
         }
         //sell ship
@@ -64,6 +66,6 @@ void ShipShop::SellAndBuyShip() {
         player_.SetShip(newShip);
         player_.Spend(newShipValue);
     } catch (...) {
-        std::cout << "Invalid input" << std::endl;
+        Logger::get().PrintAndLog("Invalid input");
     }
 }

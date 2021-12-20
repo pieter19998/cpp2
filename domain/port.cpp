@@ -1,4 +1,5 @@
 #include "port.h"
+#include "../logger/logger.h"
 
 Port::Port(int id, std::string name, std::vector<std::unique_ptr<Wares>>& wares, std::unique_ptr<Cannon>& cannon, std::vector<std::unique_ptr<Ship>>& ships)
 : id_(id), name_(std::move(name)) ,wares_(std::move(wares)),ships_(std::move(ships)),cannon_(std::move(cannon)) {}
@@ -42,17 +43,17 @@ std::unique_ptr<Cannon> &Port::GetCannon() {
 }
 
 void Port::PrintCanons() {
-    std::cout << "Cannon inventory: " << std::endl;
-    std::cout << "1) Light Cannon amount: " << cannon_->GetCannonAmount(LIGHTCANNON) << "Price: 50 pp" << std::endl;
-    std::cout << "2) Medium Cannon amount: " << cannon_->GetCannonAmount(MEDIUMCANNON) << "Price: 200 pp"<< std::endl;
-    std::cout << "3) Heavy Cannon amount: " << cannon_->GetCannonAmount(HEAVYCANNON) << "Price: 1000 pp"<< std::endl;
+    Logger::get().PrintAndLog("Cannon inventory: ");
+    Logger::get().PrintAndLog("1) Light Cannon amount: " + std::to_string(cannon_->GetCannonAmount(LIGHTCANNON)) + " Price: 50 pp");
+    Logger::get().PrintAndLog("2) Medium Cannon amount: " + std::to_string(cannon_->GetCannonAmount(MEDIUMCANNON)) + " Price: 200 pp");
+    Logger::get().PrintAndLog("3) Heavy Cannon amount: " + std::to_string(cannon_->GetCannonAmount(HEAVYCANNON)) + " Price: 1000 pp");
 }
 
 void Port::PrintShips() {
     for (auto& ship : ships_) {
-        std::cout << "Ship stats: " << std::endl;
+        Logger::get().PrintAndLog("Ship stats: ");
         ship->PrintStats();
-        std::cout << "-----------------------------------" << std::endl;
+        Logger::get().PrintAndLog("-----------------------------------");
     }
 }
 

@@ -28,7 +28,7 @@ std::unique_ptr<State> SetSail::Move(int action) {
 
 std::unique_ptr<State> SetSail::Sail() const  {
     //print all ports and distances
-    std::cout << "Current Port: " << port_.GetName() << std::endl;
+    Logger::get().PrintAndLog("Current Port: " + port_.GetName());
     auto sql{std::make_unique<Sql>()};
     auto availablePorts {std::vector<int>()};
     for (int i{1}; i < 24; ++i) {
@@ -36,25 +36,27 @@ std::unique_ptr<State> SetSail::Sail() const  {
         auto port{sql->GetPort(i)};
         if (distance > 0){
             std::cout << port->GetId() << ") " << port->GetName() << " distance: " << distance << std::endl;
+            Logger::get().PrintAndLog(std::to_string(port->GetId()) + ") " + port->GetName() + " distance: " + std::to_string(distance));
             availablePorts.emplace_back(port->GetId());
         }
     }
 //user input
     std::string destination;
-    std::cout << "Type number of port to sail to." << std::endl;
+    Logger::get().PrintAndLog("Type number of port to sail to.");
     std::cin >> destination;
+    Logger::get().Log(destination);
 //set sail
     try{
         //check if port exists
         int id {std::stoi(destination)};
         if(std::find(availablePorts.begin(), availablePorts.end(), id) == availablePorts.end()){
-            std::cout << "This Port is not available" << std::endl;
+            Logger::get().PrintAndLog("This Port is not available");
             return std::make_unique<SetSail>(player_, port_);
         }
         auto finalDestination {sql->GetPort(id)};
         return std::make_unique<Sailing>(player_,finalDestination, sql->GetDistance(port_.GetId(), id));
     } catch (...) {
-        std::cout << "Invalid input" << std::endl;
+        Logger::get().PrintAndLog("Invalid input");
     }
     return std::make_unique<SetSail>(player_, port_);
 }

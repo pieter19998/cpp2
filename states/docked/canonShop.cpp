@@ -33,18 +33,20 @@ void CanonShop::SellCannon() {
     player_.GetShip().PrintCannons();
     //input to sell cannon
     std::string item, amount;
-    std::cout << "Enter number of cannon type to sell. Or exit to go back" << std::endl;
+    Logger::get().PrintAndLog("Enter number of cannon type to sell. Or exit to go back");
     std::cin >> item;
+    Logger::get().Log(item);
     if (item == "exit" || item == "Exit") return;
-    std::cout << "Enter amount." << std::endl;
+    Logger::get().PrintAndLog("Enter amount.");
     std::cin >> amount;
+    Logger::get().Log(amount);
     //sell
     try {
         int i{std::stoi(item)};
         int a{std::stoi(amount)};
         //check stock
         if (player_.GetShip().GetCannons()->TotalCannonAmount() - a < 0) {
-            std::cout << "You do not have enough cannons" << std::endl;
+            Logger::get().PrintAndLog("You do not have enough cannons");
             return;
         }
 
@@ -62,10 +64,10 @@ void CanonShop::SellCannon() {
                 player_.Earn(a * 500);
                 break;
             default:
-                std::cout << "invalid Cannon Number" << std::endl;
+                Logger::get().PrintAndLog("Invalid Cannon Number");
         }
     } catch (...) {
-        std::cout << "Invalid input" << std::endl;
+        Logger::get().PrintAndLog("Invalid input");
     }
 }
 
@@ -74,11 +76,13 @@ void CanonShop::BuyCannon() {
     port_.PrintCanons();
     //input to buy cannon
     std::string item, amount;
-    std::cout << "Enter number of cannon type to buy. Or exit to go back" << std::endl;
+    Logger::get().PrintAndLog("Enter number of cannon type to buy. Or exit to go back");
     std::cin >> item;
+    Logger::get().Log(item);
     if (item == "exit" || item == "Exit") return;
-    std::cout << "Enter amount." << std::endl;
+    Logger::get().PrintAndLog("Enter amount.");
     std::cin >> amount;
+    Logger::get().Log(amount);
     //buy
     try {
         int i{std::stoi(item)};
@@ -87,7 +91,7 @@ void CanonShop::BuyCannon() {
         if (!player_.GetShip().CheckIfCannonFids(a)) return;
         //check if amount is valid
         if (port_.GetCannon()->TotalCannonAmount() + a > player_.GetShip().GetMaxCannons()) {
-            std::cout << "You do not have enough cannons" << std::endl;
+            Logger::get().PrintAndLog("You do not have enough cannons");
             return;
         }
         //check funds lambda
@@ -97,7 +101,7 @@ void CanonShop::BuyCannon() {
         switch (i) {
             case 1:
                 if (checkFunds(player_.GetFunds(), 50, a)) {
-                    std::cout << "Not enough gold" << std::endl;
+                    Logger::get().PrintAndLog("Not enough gold");
                 }
                 player_.GetShip().GetCannons()->AddCannon(LIGHTCANNON, a);
                 port_.RemoveCannonFromStock(LIGHTCANNON, a);
@@ -105,7 +109,7 @@ void CanonShop::BuyCannon() {
                 break;
             case 2:
                 if (checkFunds(player_.GetFunds(), 200, a)) {
-                    std::cout << "Not enough gold" << std::endl;
+                    Logger::get().PrintAndLog("Not enough gold");
                 }
                 player_.GetShip().GetCannons()->AddCannon(MEDIUMCANNON, a);
                 port_.RemoveCannonFromStock(MEDIUMCANNON, a);
@@ -113,19 +117,19 @@ void CanonShop::BuyCannon() {
                 break;
             case 3:
                 if (checkFunds(player_.GetFunds(), 1000, a)) {
-                    std::cout << "Not enough gold" << std::endl;
+                    Logger::get().PrintAndLog("Not enough gold");
                 }
                 player_.GetShip().GetCannons()->AddCannon(HEAVYCANNON, a);
                 port_.RemoveCannonFromStock(HEAVYCANNON, a);
                 player_.Spend(a * 1000);
                 break;
             default:
-                std::cout << "invalid Cannon Number" << std::endl;
+                Logger::get().PrintAndLog("Invalid Cannon Number");
         }
-        std::cout << "transaction succeeded" << std::endl;
+        Logger::get().PrintAndLog("transaction succeeded");
     }
     catch (...) {
-        std::cout << "transaction failed" << std::endl;
-        std::cout << "Invalid input" << std::endl;
+        Logger::get().PrintAndLog("Transaction failed");
+        Logger::get().PrintAndLog("Invalid input");
     }
 }

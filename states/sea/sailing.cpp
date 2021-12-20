@@ -17,10 +17,10 @@ const std::string &Sailing::GetState() const {
 
 std::unique_ptr<State> Sailing::Move(int action) {
     //dice roll
-    std::cout << "Distance to port: " << distance_ << std::endl;
+    Logger::get().PrintAndLog("Distance to port: " + std::to_string(distance_));
     if (action == 1) {
         int roll{Dice::get().generateNumber(1, 20)};
-        std::cout << "You rolled: " << roll << std::endl;
+        Logger::get().PrintAndLog("You rolled:" + std::to_string(roll));
         if (roll == 1 || roll == 2) Nothing();
         if (roll == 3 || roll == 4) Breeze();
         if (roll >= 5 && roll <= 7) Weak();
@@ -34,7 +34,7 @@ std::unique_ptr<State> Sailing::Move(int action) {
 }
 
 void Sailing::Nothing() {
-    std::cout << "Nothing happened" << std::endl;
+    Logger::get().PrintAndLog("Nothing happened");
 }
 
 void Sailing::Breeze() {
@@ -54,19 +54,19 @@ void Sailing::Weak() {
 
 void Sailing::Normal() {
     distance_--;
-    std::cout << "Moved Distance of 1" << std::endl;
+    Logger::get().PrintAndLog("Moved Distance of 1");
 }
 
 void Sailing::Strong() {
-    std::cout << "Moved Distance of 2" << std::endl;
+    Logger::get().PrintAndLog("Moved Distance of 2");
     distance_ = distance_ - 2;
 }
 
 void Sailing::Storm() {
-    std::cout << "It has started storming" << std::endl;
+    Logger::get().PrintAndLog("It has started storming");
     int roll{Dice::get().generateNumber(1, 5)};
     if (roll == 1 || roll == 2) {
-        std::cout << "Distance increased by 1" << std::endl;
+        Logger::get().PrintAndLog("Distance increased by 1");
         distance_++;
     }
     if (roll == 3 || roll == 4) Nothing();
@@ -75,6 +75,6 @@ void Sailing::Storm() {
     //calculate storm damage
     int damage{Dice::get().generateNumber(1, 100)};
     player_.GetShip().Damage(player_.GetShip().GetHealth() / damage);
-    std::cout << "Ship health after the storm \n health: " << player_.GetShip().GetHealth() << "/"
-              << player_.GetShip().GetMaxHealth() << std::endl;
+    Logger::get().PrintAndLog("Ship health after the storm \n health: " + std::to_string(player_.GetShip().GetHealth())
+    + "/" + std::to_string(player_.GetShip().GetMaxHealth()));
 }

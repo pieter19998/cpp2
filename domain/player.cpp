@@ -1,4 +1,5 @@
 #include "player.h"
+#include "../logger/logger.h"
 
 Player::Player(int gold, std::unique_ptr<Ship>& ship) : gold_(gold), ship_(std::move(ship)), playing_(true){}
 
@@ -27,12 +28,12 @@ void Player::Spend(int price) {
 }
 
 void Player::PrintGold() {
-    std::cout << "wallet: " << gold_ << std::endl;
+    Logger::get().PrintAndLog("wallet: " +  std::to_string(gold_));
 }
 
 bool Player::CheckFunds(int price) const {
     if (gold_ - price < 0){
-        std::cout << "Not enough gold." << std::endl;
+        Logger::get().PrintAndLog("Not enough gold");
         return false;
     }
     return true;
