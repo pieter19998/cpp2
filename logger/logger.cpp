@@ -14,3 +14,7 @@ void Logger::PrintAndLog(const std::string &message) {
     Log(message);
     std::cout << message << std::endl;
 }
+
+void Logger::ClearFile() {
+    std::remove("log.txt");
+}

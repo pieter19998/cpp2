@@ -42,6 +42,7 @@ void Game::SetupGame() {
     player_ = std::make_unique<Player>(Dice::get().generateNumber(100000, 250000), ship);
     port_ = sql->GetPort(Dice::get().generateNumber(1, 24));
     state_ = std::make_unique<Docked>(*player_, *port_);
+    Logger::get().ClearFile();
 }
 
 void Game::PrintMoves() {

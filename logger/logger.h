@@ -12,4 +12,5 @@ public:
     static Logger& get();
     void Log(const std::string& data);
     void PrintAndLog(const std::string& message);
+    void ClearFile();
 };
